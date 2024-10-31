@@ -11,3 +11,13 @@ This guide is for installing Dart and Flutter on a Linux machine. The guide is f
 ```export PATH="$PATH:/opt/flutter/bin"```
 ## 5. Run the following command to check if Flutter is installed correctly.
 ```flutter doctor```
+## 6. Install Flutter Linux Dependencies.
+```sudo dnf install ninja-build cmake clang```
+
+# Running website
+## 1. Clone the repository.
+```git clone https://github.com/Lmx154/dart_demo_web.git```
+## 2. Open your IDE/ Editor in the project directory.
+```zed .``` or ```code .```
+## 3. Run the following command to start the web server.
+```flutter run -d web-server```
