@@ -1,12 +1,13 @@
 // lib/game/lousy_rocket_game.dart
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flame/collisions.dart';
 import 'rocket_component.dart';
 import 'parallax_background_component.dart';
 import 'floating_object_component.dart';
 import 'dart:math';
 
-class LousyRocketGame extends FlameGame with TapDetector {
+class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection {
   late RocketComponent rocket;
   late ParallaxBackgroundComponent background;
   final Random random = Random();
