@@ -1,31 +1,17 @@
-// lib/game/rocket_component.dart
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/game.dart';
-import 'floating_object_component.dart'; // Add this import
-import 'package:flutter/material.dart'; // Add this import for TextStyle
+import 'floating_object_component.dart';
+import 'explosion_component.dart'; // Add this import
+import 'lousy_rocket_game.dart'; // Add this import
 
 class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, CollisionCallbacks {
   final double gravity = 0.5;
   final double jumpStrength = -10;
   double velocity = 0;
   int collisionCount = 0; // Collision counter
-  late TextComponent collisionMessage; // Text component for collision message
 
-  RocketComponent() : super(size: Vector2(50, 50)) {
-    // Initialize the collision message text component
-    collisionMessage = TextComponent(
-      text: '',
-      position: Vector2(0, 0), // Temporary position, will be updated in onLoad
-      anchor: Anchor.center,
-      textRenderer: TextPaint(
-        style: TextStyle(
-          color: Colors.red,
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
+  RocketComponent() : super(size: Vector2(50, 50));
 
   @override
   Future<void> onLoad() async {
@@ -34,10 +20,6 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
 
     // Add a hitbox for collision detection
     add(RectangleHitbox()..collisionType = CollisionType.active);
-
-    // Update the position of the collision message and add it to the component tree
-    collisionMessage.position = Vector2(position.x + size.x / 2, position.y - 20);
-    add(collisionMessage);
   }
 
   void applyGravity() {
@@ -46,7 +28,6 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
 
   void updatePosition() {
     position.y += velocity;
-    collisionMessage.position = Vector2(position.x + size.x / 2, position.y - 20); // Update message position
   }
 
   void jump() {
@@ -70,8 +51,15 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
     if (other is FloatingObjectComponent) {
       // Handle collision with floating object
       collisionCount++;
-      collisionMessage.text = 'Collision detected! Count: $collisionCount';
+      final game = gameRef as LousyRocketGame;
+      game.updateCollisionMessage('Collision detected! Count: $collisionCount');
       print('Collision with floating object! Count: $collisionCount');
+
+      // Replace rocket with explosion animation and stop the game
+      final explosion = ExplosionComponent(position);
+      game.add(explosion);
+      removeFromParent();
+      game.stopGame();
     }
   }
 }

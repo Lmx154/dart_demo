@@ -1,11 +1,12 @@
-// lib/game/lousy_rocket_game.dart
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/collisions.dart';
+import 'package:flame/components.dart';
 import 'rocket_component.dart';
 import 'parallax_background_component.dart';
 import 'floating_object_component.dart';
 import 'dart:math';
+import 'package:flutter/material.dart'; // Add this import for TextStyle
 
 class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection {
   late RocketComponent rocket;
@@ -13,6 +14,8 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   final Random random = Random();
   double timeSinceLastSpawn = 0;
   double spawnInterval = 2; // Initial interval in seconds between spawns
+  late TextComponent collisionMessage; // Text component for collision message
+  bool isGameOver = false; // Flag to check if the game is over
 
   @override
   Future<void> onLoad() async {
@@ -21,11 +24,27 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
 
     rocket = RocketComponent();
     add(rocket);
+
+    // Initialize and add the collision message text component
+    collisionMessage = TextComponent(
+      text: '',
+      position: Vector2(size.x / 2, 20), // Centered horizontally, 20 units from the top
+      anchor: Anchor.center,
+      textRenderer: TextPaint(
+        style: TextStyle(
+          color: Colors.red,
+          fontSize: 16,
+        ),
+      ),
+    );
+    add(collisionMessage);
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+    if (isGameOver) return; // Stop updating if the game is over
+
     rocket.applyGravity();
     rocket.updatePosition();
     rocket.checkBoundaries(size);
@@ -47,7 +66,9 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
 
   @override
   void onTap() {
-    rocket.jump();
+    if (!isGameOver) {
+      rocket.jump();
+    }
   }
 
   void spawnFloatingObject() {
@@ -60,5 +81,15 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   void updateSpawnRate(int score) {
     // Decrease the spawn interval as the score increases
     spawnInterval = max(0.5, 2 - score * 0.05); // Minimum interval of 0.5 seconds
+  }
+
+  // Method to update the collision message text
+  void updateCollisionMessage(String message) {
+    collisionMessage.text = message;
+  }
+
+  // Method to stop the game
+  void stopGame() {
+    isGameOver = true;
   }
 }
