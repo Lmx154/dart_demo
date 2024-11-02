@@ -39,10 +39,10 @@ class AboutPage extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.contact_mail),
-              title: Text('Contact'),
+              leading: Icon(Icons.gamepad),
+              title: Text('Lousy Rocket Game'), // Updated title
               onTap: () {
-                Navigator.pushNamed(context, '/contact');
+                Navigator.pushNamed(context, '/rocket'); // Updated route
               },
             ),
           ],

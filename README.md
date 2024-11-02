@@ -12,7 +12,7 @@ This guide is for installing Dart and Flutter on a Linux machine. The guide is f
 ## 5. Run the following command to check if Flutter is installed correctly.
 ```flutter doctor```
 ## 6. Install Flutter Linux Dependencies.
-```sudo dnf install ninja-build cmake clang```
+```sudo dnf install ninja-build cmake clang gtk3-devel```
 
 # Running website
 ## 1. Clone the repository.
