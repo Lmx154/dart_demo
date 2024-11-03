@@ -14,22 +14,24 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    final image = await gameRef.images.load('asteroid.png');
-    final spriteSize = Vector2(64, 64); // Size of each frame in the sprite sheet
-    final spriteAnimation = SpriteAnimation.fromFrameData(
-      image,
-      SpriteAnimationData.sequenced(
-        amount: 1, // Number of frames in the sprite sheet
-        stepTime: 1.0, // Time per frame
-        textureSize: spriteSize,
-      ),
-    );
-
-    animation = spriteAnimation;
-    position = Vector2(gameRef.size.x, random.nextDouble() * gameRef.size.y); // Randomize the initial position
+    animation = await loadAnimation();
+    position = Vector2(gameRef.size.x, random.nextDouble() * gameRef.size.y);
 
     // Add a hitbox for collision detection
     add(RectangleHitbox()..collisionType = CollisionType.passive);
+  }
+
+  Future<SpriteAnimation> loadAnimation() async {
+    final image = await gameRef.images.load('asteroid.png');
+    final spriteSize = Vector2(64, 64);
+    return SpriteAnimation.fromFrameData(
+      image,
+      SpriteAnimationData.sequenced(
+        amount: 1,
+        stepTime: 1.0,
+        textureSize: spriteSize,
+      ),
+    );
   }
 
   @override

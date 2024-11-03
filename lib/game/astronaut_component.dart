@@ -15,19 +15,21 @@ class AstronautComponent extends FloatingObjectComponent {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    final astronaut1 = await gameRef.loadSprite('astronaut1.png');
-    final astronaut2 = await gameRef.loadSprite('astronaut2.png');
-
-    final spriteAnimation = SpriteAnimation.spriteList(
-      [astronaut1, astronaut2],
-      stepTime: 0.5, // Time per frame
-    );
-
-    animation = spriteAnimation;
+    animation = await loadAnimation();
     position = Vector2(gameRef.size.x, random.nextDouble() * gameRef.size.y); // Randomize the initial position
 
     // Add a hitbox for collision detection
     add(RectangleHitbox()..collisionType = CollisionType.passive);
+  }
+
+  @override
+  Future<SpriteAnimation> loadAnimation() async {
+    final astronaut1 = await gameRef.loadSprite('astronaut1.png');
+    final astronaut2 = await gameRef.loadSprite('astronaut2.png');
+    return SpriteAnimation.spriteList(
+      [astronaut1, astronaut2],
+      stepTime: 0.5,
+    );
   }
 
   @override

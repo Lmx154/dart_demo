@@ -8,6 +8,7 @@ import 'floating_object_component.dart';
 import 'astronaut_component.dart'; // Add this import
 import 'dart:math';
 import 'package:flutter/material.dart'; // Add this import for TextStyle
+import 'package:flame/experimental.dart'; // Ensure this import
 
 class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection {
   late RocketComponent rocket;
@@ -31,19 +32,31 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
+
+    final world = World();
+    add(world);
+
+    final cameraComponent = CameraComponent.withFixedResolution(
+      width: 1080,
+      height: 1920,
+      world: world,
+    );
+    add(cameraComponent);
+
     background = ParallaxBackgroundComponent();
-    add(background);
+    world.add(background);
 
     rocket = RocketComponent(
-      gravity: scaleValue(baseGravity),
-      jumpStrength: scaleValue(baseJumpStrength),
+      gravity: baseGravity, // Use fixed values
+      jumpStrength: baseJumpStrength,
     );
-    add(rocket);
+    world.add(rocket);
 
     // Initialize and add the collision message text component
     collisionMessage = TextComponent(
       text: '',
-      position: Vector2(size.x / 2, 20), // Centered horizontally, 20 units from the top
+      position: Vector2(540, 20), // 1080 / 2 = 540
       anchor: Anchor.center,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -52,12 +65,12 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
         ),
       ),
     );
-    add(collisionMessage);
+    world.add(collisionMessage);
 
     // Initialize and add the score message text component
     scoreMessage = TextComponent(
       text: 'Score: $score',
-      position: Vector2(size.x / 2, 50), // Centered horizontally, 50 units from the top
+      position: Vector2(540, 50), // 1080 / 2 = 540
       anchor: Anchor.center,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -66,15 +79,11 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
         ),
       ),
     );
-    add(scoreMessage);
-  }
-
-  double scaleValue(double baseValue) {
-    return baseValue * (size.y / 1080);
+    world.add(scoreMessage);
   }
 
   double getCurrentSpeed() {
-    return scaleValue(baseObjectSpeed + score * speedIncrement);
+    return baseObjectSpeed + score * speedIncrement;
   }
 
   @override
@@ -95,7 +104,7 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
     // Update the speed of floating objects to match the background speed
     timeSinceLastSpawn += dt;
     if (timeSinceLastSpawn >= spawnInterval) {
-      spawnFloatingObject();
+      spawnObject();
       timeSinceLastSpawn = 0;
     }
 
@@ -114,25 +123,36 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
     }
   }
 
-  void spawnFloatingObject() {
+  void spawnObject() {
     final speed = getCurrentSpeed();
-    final rotationSpeed = (random.nextDouble() - 0.5) * 2; // Random rotation speed
-    final floatingObject = FloatingObjectComponent(
-      speed: speed,
-      rotationSpeed: rotationSpeed,
-      size: scaleValue(baseObjectSize),
-    );
-    add(floatingObject);
+    final rotationSpeed = (random.nextDouble() - 0.5) * 2;
+    final shouldSpawnAstronaut = random.nextDouble() < 0.2; // 20% chance
+
+    final object = shouldSpawnAstronaut
+        ? AstronautComponent(
+            speed: speed,
+            rotationSpeed: rotationSpeed,
+            size: baseObjectSize * 0.6,
+          )
+        : FloatingObjectComponent(
+            speed: speed,
+            rotationSpeed: rotationSpeed,
+            size: baseObjectSize,
+          );
+
+    add(object);
   }
 
   void spawnAstronaut() {
     final speed = getCurrentSpeed();
-    final rotationSpeed = (random.nextDouble() - 0.5) * 2; // Random rotation speed
+    final rotationSpeed = (random.nextDouble() - 0.5) * 2;
+
     final astronaut = AstronautComponent(
       speed: speed,
       rotationSpeed: rotationSpeed,
-      size: scaleValue(baseObjectSize * 0.6), // Smaller size for astronauts
+      size: baseObjectSize * 0.6,
     );
+
     add(astronaut);
   }
 
