@@ -4,19 +4,28 @@ import 'package:flame/collisions.dart';
 import 'package:flame/game.dart';
 import 'dart:math';
 
-class FloatingObjectComponent extends SpriteComponent with HasGameRef<FlameGame>, CollisionCallbacks {
+class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<FlameGame>, CollisionCallbacks {
   final double speed;
   final double rotationSpeed;
   final Random random = Random();
 
-  FloatingObjectComponent({required this.speed, required this.rotationSpeed}) : super() {
-    // Initialize the size within the constructor body
-    size = Vector2(50 + random.nextDouble() * 50, 50 + random.nextDouble() * 50);
-  }
+  FloatingObjectComponent({required this.speed, required this.rotationSpeed, required double size}) : super(size: Vector2(size, size));
 
   @override
   Future<void> onLoad() async {
-    sprite = await gameRef.loadSprite('asteroid.png'); // Load the floating object image
+    await super.onLoad();
+    final image = await gameRef.images.load('asteroid.png');
+    final spriteSize = Vector2(64, 64); // Size of each frame in the sprite sheet
+    final spriteAnimation = SpriteAnimation.fromFrameData(
+      image,
+      SpriteAnimationData.sequenced(
+        amount: 1, // Number of frames in the sprite sheet
+        stepTime: 1.0, // Time per frame
+        textureSize: spriteSize,
+      ),
+    );
+
+    animation = spriteAnimation;
     position = Vector2(gameRef.size.x, random.nextDouble() * gameRef.size.y); // Randomize the initial position
 
     // Add a hitbox for collision detection

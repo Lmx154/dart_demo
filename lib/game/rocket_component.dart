@@ -2,19 +2,21 @@ import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/game.dart';
 import 'floating_object_component.dart';
+import 'astronaut_component.dart'; // Add this import
 import 'explosion_component.dart'; // Add this import
 import 'lousy_rocket_game.dart'; // Add this import
 
 class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, CollisionCallbacks {
-  final double gravity = 0.5;
-  final double jumpStrength = -10;
+  final double gravity;
+  final double jumpStrength;
   double velocity = 0;
   int collisionCount = 0; // Collision counter
 
-  RocketComponent() : super(size: Vector2(50, 50));
+  RocketComponent({required this.gravity, required this.jumpStrength}) : super(size: Vector2(50, 50));
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
     sprite = await gameRef.loadSprite('rocket.png');
     position = Vector2(gameRef.size.x / 2 - 25, gameRef.size.y / 2 - 25);
 
@@ -48,12 +50,13 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (other is FloatingObjectComponent) {
-      // Handle collision with floating object
+    final game = gameRef as LousyRocketGame;
+
+    if (other is FloatingObjectComponent && other is! AstronautComponent) {
+      // Handle collision with space debris
       collisionCount++;
-      final game = gameRef as LousyRocketGame;
       game.updateCollisionMessage('Collision detected! Count: $collisionCount');
-      print('Collision with floating object! Count: $collisionCount');
+      print('Collision with space debris! Count: $collisionCount');
 
       // Replace rocket with explosion animation and stop the game
       final explosion = ExplosionComponent(position);
