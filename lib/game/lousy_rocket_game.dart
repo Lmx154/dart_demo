@@ -27,6 +27,7 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   double baseJumpStrength = -10;
   double baseObjectSpeed = 100;
   double baseObjectSize = 50;
+  double speedIncrement = 10; // Speed increment based on score
 
   @override
   Future<void> onLoad() async {
@@ -72,6 +73,10 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
     return baseValue * (size.y / 1080);
   }
 
+  double getCurrentSpeed() {
+    return scaleValue(baseObjectSpeed + score * speedIncrement);
+  }
+
   @override
   void update(double dt) {
     super.update(dt);
@@ -110,7 +115,7 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   }
 
   void spawnFloatingObject() {
-    final speed = scaleValue(baseObjectSpeed);
+    final speed = getCurrentSpeed();
     final rotationSpeed = (random.nextDouble() - 0.5) * 2; // Random rotation speed
     final floatingObject = FloatingObjectComponent(
       speed: speed,
@@ -121,7 +126,7 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   }
 
   void spawnAstronaut() {
-    final speed = scaleValue(baseObjectSpeed);
+    final speed = getCurrentSpeed();
     final rotationSpeed = (random.nextDouble() - 0.5) * 2; // Random rotation speed
     final astronaut = AstronautComponent(
       speed: speed,

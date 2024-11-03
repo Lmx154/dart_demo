@@ -6,6 +6,7 @@ import 'package:flame/collisions.dart'; // Add this import
 import 'floating_object_component.dart';
 import 'lousy_rocket_game.dart';
 import 'rocket_component.dart'; // Add this import
+import 'astronaut_rescue_animation_component.dart'; // Add this import
 
 class AstronautComponent extends FloatingObjectComponent {
   AstronautComponent({required double speed, required double rotationSpeed, required double size})
@@ -35,6 +36,8 @@ class AstronautComponent extends FloatingObjectComponent {
     if (other is RocketComponent) {
       final game = gameRef as LousyRocketGame;
       game.incrementScore();
+      final rescueAnimation = AstronautRescueAnimationComponent(position);
+      game.add(rescueAnimation);
       removeFromParent(); // Remove the astronaut from the game
       print('Astronaut rescued! Score: ${game.score}');
     }
