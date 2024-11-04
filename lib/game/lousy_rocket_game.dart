@@ -23,8 +23,8 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   int score = 0; // Score counter
 
   // Parameters for scaling
-  final double gravity = 500;
-  final double jumpStrength = -250;
+  final double gravity = 950;
+  final double jumpStrength = -350;
   final double objectSpeed = 100;
   final double objectSize = 50;
   final double speedIncrement = 10; // Speed increment based on score

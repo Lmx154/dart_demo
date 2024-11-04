@@ -17,7 +17,7 @@ class ExplosionComponent extends SpriteAnimationComponent with HasGameRef<FlameG
       image,
       SpriteAnimationData.sequenced(
         amount: 12, // Number of frames in the sprite sheet
-        stepTime: 0.1, // Time per frame
+        stepTime: 0.1 * (fixedResolution.x / 800), // Scale step time based on fixed resolution
         textureSize: spriteSize,
         loop: false, // Ensure the animation only plays once
       ),

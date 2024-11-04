@@ -71,7 +71,7 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
 
       // Replace rocket with explosion animation and stop the game
       final explosion = ExplosionComponent(position, fixedResolution: fixedResolution);
-      game.add(explosion);
+      parent?.add(explosion); // Add explosion to the same parent
       removeFromParent();
       game.stopGame();
     }

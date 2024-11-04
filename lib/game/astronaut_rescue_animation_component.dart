@@ -17,7 +17,7 @@ class AstronautRescueAnimationComponent extends SpriteAnimationComponent with Ha
 
     final spriteAnimation = SpriteAnimation.spriteList(
       [astronautRescue1, astronautRescue2, astronautRescue3],
-      stepTime: 0.1, // Time per frame
+      stepTime: 0.1 * (fixedResolution.x / 800), // Scale step time based on fixed resolution
       loop: false, // Ensure the animation only plays once
     );
 

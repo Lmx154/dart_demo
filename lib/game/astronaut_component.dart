@@ -38,7 +38,7 @@ class AstronautComponent extends FloatingObjectComponent {
       final game = gameRef as LousyRocketGame;
       game.incrementScore();
       final rescueAnimation = AstronautRescueAnimationComponent(position, fixedResolution: fixedResolution);
-      game.add(rescueAnimation);
+      parent?.add(rescueAnimation); // Add rescue animation to the same parent
       removeFromParent(); // Remove the astronaut from the game
       print('Astronaut rescued! Score: ${game.score}');
     }
