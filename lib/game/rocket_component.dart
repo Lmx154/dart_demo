@@ -23,8 +23,11 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
     position = Vector2(fixedResolution.x / 2, fixedResolution.y / 2); // Using fixedResolution to position the rocket
     anchor = Anchor.center; // Set anchor to center
 
-    // Add a hitbox for collision detection
-    add(RectangleHitbox()..collisionType = CollisionType.active);
+    // Add a hitbox for collision detection, slightly smaller than the rocket size
+    add(RectangleHitbox.relative(
+      Vector2(0.8, 0.8), // 80% of the rocket's size
+      parentSize: size,
+    )..collisionType = CollisionType.active);
   }
 
   void applyGravity(double dt) {
