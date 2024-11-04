@@ -14,20 +14,24 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
   int collisionCount = 0; // Collision counter
 
   RocketComponent({required this.gravity, required this.jumpStrength, required this.fixedResolution})
-      : super(size: Vector2(50, 50) * (fixedResolution.y / 1080)); // Scale size based on fixed resolution
+      : super(size: Vector2(60, 60) * (fixedResolution.y / 1080)) { // Increase size by 20%
+    anchor = Anchor.center; // Set anchor to center
+  }
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
     sprite = await gameRef.loadSprite('rocket.png');
     position = Vector2(fixedResolution.x / 2, fixedResolution.y / 2); // Using fixedResolution to position the rocket
-    anchor = Anchor.center; // Set anchor to center
 
-    // Add a hitbox for collision detection, slightly smaller than the rocket size
-    add(RectangleHitbox.relative(
-      Vector2(0.8, 0.8), // 80% of the rocket's size
-      parentSize: size,
-    )..collisionType = CollisionType.active);
+    // Add a circular hitbox centered on the component
+    final hitbox = CircleHitbox()
+      ..radius = size.x * 0.2 // Reduce radius to 20% of the component size
+      ..position = Vector2.zero() // Center the hitbox
+      ..collisionType = CollisionType.active
+      ..debugMode = true;
+
+    add(hitbox);
   }
 
   void applyGravity(double dt) {

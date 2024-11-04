@@ -28,7 +28,10 @@ class AstronautComponent extends FloatingObjectComponent {
     anchor = Anchor.center; // Set anchor to center
 
     // Add a hitbox for collision detection
-    add(RectangleHitbox()..collisionType = CollisionType.passive);
+    add(RectangleHitbox()
+      ..position = Vector2.zero() // Position at the component's origin (center)
+      ..collisionType = CollisionType.passive
+      ..debugMode = true); // Enable debug mode
   }
 
   @override

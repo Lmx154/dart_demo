@@ -10,10 +10,19 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
   final Random random = Random();
   final Vector2 fixedResolution;
 
-  FloatingObjectComponent({required this.speed, required this.rotationSpeed, required double size, required this.fixedResolution})
-      : super(size: Vector2(size, size)) {
-    this.size *= (0.5 + random.nextDouble()); // Randomize size between 50% and 150%
-    anchor = Anchor.center; // Set anchor to center
+  FloatingObjectComponent({
+    required this.speed,
+    required this.rotationSpeed,
+    required double size,
+    required this.fixedResolution,
+  }) : super(
+          size: Vector2.zero(), // Initialize size to zero
+          anchor: Anchor.center, // Set component anchor to center
+        ) {
+    // Compute the random size multiplier
+    final randomSizeMultiplier = 1.25 + random.nextDouble() * 1.75;
+    // Set the size in the constructor body
+    this.size = Vector2(size, size) * randomSizeMultiplier;
   }
 
   @override
@@ -33,11 +42,14 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
     animation = spriteAnimation;
     position = Vector2(fixedResolution.x, random.nextDouble() * fixedResolution.y); // Randomize the initial position
 
-    // Add a hitbox for collision detection, slightly smaller than the object size
-    add(RectangleHitbox.relative(
-      Vector2(0.8, 0.8), // 80% of the object's size
-      parentSize: size,
-    )..collisionType = CollisionType.passive);
+    // Add a circular hitbox centered on the component
+    add(
+      CircleHitbox()
+        ..radius = size.x * 0.4 // Set radius based on component size
+        ..position = Vector2.zero() // Position at the component's origin (center)
+        ..collisionType = CollisionType.passive
+        ..debugMode = true,
+    );
   }
 
   @override
