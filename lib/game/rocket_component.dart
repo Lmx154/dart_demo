@@ -5,6 +5,7 @@ import 'floating_object_component.dart';
 import 'astronaut_component.dart'; // Add this import
 import 'explosion_component.dart'; // Add this import
 import 'lousy_rocket_game.dart'; // Add this import
+import 'dart:async'; // Add this import
 
 class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, CollisionCallbacks {
   final double gravity;
@@ -57,6 +58,12 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
     }
   }
 
+  void reset() {
+    position = Vector2(fixedResolution.x / 2, fixedResolution.y / 2);
+    velocity = 0;
+    collisionCount = 0; // Reset collision count
+  }
+
   @override
   void update(double dt) {
     super.update(dt);
@@ -81,6 +88,11 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
       parent?.add(explosion); // Add explosion to the same parent
       removeFromParent();
       game.stopGame();
+
+      // Trigger the game reset after a delay
+      Future.delayed(Duration(seconds: 3), () {
+        game.resetGame();
+      });
     }
   }
 }

@@ -171,4 +171,30 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   void stopGame() {
     isGameOver = true;
   }
+
+  void resetGame() {
+    // Reset game state variables
+    isGameOver = false;
+    score = 0;
+    timeSinceLastSpawn = 0;
+    timeSinceLastAstronautSpawn = 0;
+
+    // Clear all components from the world
+    world.children.clear();
+
+    // Re-add essential components
+    world.add(background);
+    world.add(rocket);
+    world.add(collisionMessage);
+    world.add(scoreMessage);
+
+    // Reset rocket position and velocity
+    rocket.position = Vector2(fixedResolution.x / 2, fixedResolution.y / 2);
+    rocket.velocity = 0;
+    rocket.collisionCount = 0; // Reset collision count
+
+    // Reset collision message and score message
+    collisionMessage.text = '';
+    scoreMessage.text = 'Score: $score';
+  }
 }
