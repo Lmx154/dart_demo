@@ -48,7 +48,7 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
         ..radius = size.x * 0.4 // Set radius based on component size
         ..position = Vector2.zero() // Position at the component's origin (center)
         ..collisionType = CollisionType.passive
-        ..debugMode = true,
+        //..debugMode = true,
     );
   }
 

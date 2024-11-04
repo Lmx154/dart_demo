@@ -10,7 +10,9 @@ import 'astronaut_rescue_animation_component.dart'; // Add this import
 
 class AstronautComponent extends FloatingObjectComponent {
   AstronautComponent({required double speed, required double rotationSpeed, required double size, required Vector2 fixedResolution})
-      : super(speed: speed, rotationSpeed: rotationSpeed, size: size, fixedResolution: fixedResolution); // Remove anchor from constructor
+      : super(speed: speed, rotationSpeed: rotationSpeed, size: size, fixedResolution: fixedResolution) {
+    this.size = Vector2(size, size); // Set size directly to ensure 100% size
+  }
 
   @override
   Future<void> onLoad() async {
@@ -31,7 +33,8 @@ class AstronautComponent extends FloatingObjectComponent {
     add(RectangleHitbox()
       ..position = Vector2.zero() // Position at the component's origin (center)
       ..collisionType = CollisionType.passive
-      ..debugMode = true); // Enable debug mode
+      //..debugMode = true
+      ); // Enable debug mode
   }
 
   @override

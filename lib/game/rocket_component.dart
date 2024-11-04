@@ -28,8 +28,8 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
     final hitbox = CircleHitbox()
       ..radius = size.x * 0.2 // Reduce radius to 20% of the component size
       ..position = Vector2.zero() // Center the hitbox
-      ..collisionType = CollisionType.active
-      ..debugMode = true;
+      ..collisionType = CollisionType.active;
+      //..debugMode = true;
 
     add(hitbox);
   }
