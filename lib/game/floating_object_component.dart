@@ -8,8 +8,9 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
   final double speed;
   final double rotationSpeed;
   final Random random = Random();
+  final Vector2 fixedResolution; // Add this field
 
-  FloatingObjectComponent({required this.speed, required this.rotationSpeed, required double size}) : super(size: Vector2(size, size));
+  FloatingObjectComponent({required this.speed, required this.rotationSpeed, required double size, required this.fixedResolution}) : super(size: Vector2(size, size));
 
   @override
   Future<void> onLoad() async {
@@ -26,7 +27,7 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
     );
 
     animation = spriteAnimation;
-    position = Vector2(gameRef.size.x, random.nextDouble() * gameRef.size.y); // Randomize the initial position
+    position = Vector2(fixedResolution.x, random.nextDouble() * fixedResolution.y); // Randomize the initial position
 
     // Add a hitbox for collision detection
     add(RectangleHitbox()..collisionType = CollisionType.passive);
@@ -35,8 +36,8 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
   @override
   void update(double dt) {
     super.update(dt);
-    position.x -= speed * dt; // Move the object to the left
-    angle += rotationSpeed * dt; // Rotate the object
+    position.x -= speed * dt * (fixedResolution.x / 800); // Scale speed based on fixed resolution
+    angle += rotationSpeed * dt * (fixedResolution.x / 800); // Scale rotation speed based on fixed resolution
 
     // Remove the object if it goes off-screen
     if (position.x < -size.x) {

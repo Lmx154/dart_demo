@@ -23,27 +23,47 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   int score = 0; // Score counter
 
   // Parameters for scaling
-  double baseGravity = 0.5;
-  double baseJumpStrength = -10;
-  double baseObjectSpeed = 100;
-  double baseObjectSize = 50;
-  double speedIncrement = 10; // Speed increment based on score
+  final double gravity = 500;
+  final double jumpStrength = -250;
+  final double objectSpeed = 100;
+  final double objectSize = 50;
+  final double speedIncrement = 10; // Speed increment based on score
+
+  late World world; // World component
+  late CameraComponent camera; // Camera component
+
+  // Define the fixed resolution
+  final Vector2 fixedResolution = Vector2(800, 600);
+
+  LousyRocketGame() {
+    world = World();
+    camera = CameraComponent.withFixedResolution(
+      world: world,
+      width: fixedResolution.x,
+      height: fixedResolution.y,
+    );
+    camera.viewfinder.position = fixedResolution / 2; // Center the camera on the fixed resolution
+  }
 
   @override
   Future<void> onLoad() async {
-    background = ParallaxBackgroundComponent();
-    add(background);
+    add(world);
+    add(camera);
+
+    background = ParallaxBackgroundComponent(fixedResolution: fixedResolution);
+    world.add(background);
 
     rocket = RocketComponent(
-      gravity: scaleValue(baseGravity),
-      jumpStrength: scaleValue(baseJumpStrength),
+      gravity: gravity,
+      jumpStrength: jumpStrength,
+      fixedResolution: fixedResolution,
     );
-    add(rocket);
+    world.add(rocket);
 
     // Initialize and add the collision message text component
     collisionMessage = TextComponent(
       text: '',
-      position: Vector2(size.x / 2, 20), // Centered horizontally, 20 units from the top
+      position: Vector2(fixedResolution.x / 2, 20), // Centered horizontally in the fixed resolution
       anchor: Anchor.center,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -52,12 +72,12 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
         ),
       ),
     );
-    add(collisionMessage);
+    world.add(collisionMessage);
 
     // Initialize and add the score message text component
     scoreMessage = TextComponent(
       text: 'Score: $score',
-      position: Vector2(size.x / 2, 50), // Centered horizontally, 50 units from the top
+      position: Vector2(fixedResolution.x / 2, 50), // Centered horizontally in the fixed resolution
       anchor: Anchor.center,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -66,25 +86,17 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
         ),
       ),
     );
-    add(scoreMessage);
-  }
-
-  double scaleValue(double baseValue) {
-    return baseValue * (size.y / 1080);
+    world.add(scoreMessage);
   }
 
   double getCurrentSpeed() {
-    return scaleValue(baseObjectSpeed + score * speedIncrement);
+    return objectSpeed + score * speedIncrement;
   }
 
   @override
   void update(double dt) {
     super.update(dt);
     if (isGameOver) return; // Stop updating if the game is over
-
-    rocket.applyGravity();
-    rocket.updatePosition();
-    rocket.checkBoundaries(size);
 
     // Example: Update the background speed based on a hypothetical score
     background.updateSpeed(score);
@@ -120,9 +132,10 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
     final floatingObject = FloatingObjectComponent(
       speed: speed,
       rotationSpeed: rotationSpeed,
-      size: scaleValue(baseObjectSize),
+      size: objectSize * (fixedResolution.y / 1080), // Scale size based on fixed resolution
+      fixedResolution: fixedResolution,
     );
-    add(floatingObject);
+    world.add(floatingObject);
   }
 
   void spawnAstronaut() {
@@ -131,9 +144,10 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
     final astronaut = AstronautComponent(
       speed: speed,
       rotationSpeed: rotationSpeed,
-      size: scaleValue(baseObjectSize * 0.6), // Smaller size for astronauts
+      size: objectSize * 0.6 * (fixedResolution.y / 1080), // Scale size based on fixed resolution
+      fixedResolution: fixedResolution,
     );
-    add(astronaut);
+    world.add(astronaut);
   }
 
   void updateSpawnRate(int score) {

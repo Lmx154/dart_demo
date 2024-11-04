@@ -4,7 +4,10 @@ import 'package:flame/sprite.dart';
 import 'package:flame/game.dart';
 
 class ExplosionComponent extends SpriteAnimationComponent with HasGameRef<FlameGame> {
-  ExplosionComponent(Vector2 position) : super(position: position, size: Vector2.all(100));
+  final Vector2 fixedResolution; // Add this field
+
+  ExplosionComponent(Vector2 position, {required this.fixedResolution}) 
+      : super(position: position, size: Vector2.all(fixedResolution.x * 0.125)); // Adjust size based on fixed resolution
 
   @override
   Future<void> onLoad() async {
@@ -21,6 +24,7 @@ class ExplosionComponent extends SpriteAnimationComponent with HasGameRef<FlameG
     );
 
     animation = spriteAnimation;
+    anchor = Anchor.center; // Set anchor to center
   }
 
   @override

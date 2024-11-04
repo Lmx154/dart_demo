@@ -9,8 +9,8 @@ import 'rocket_component.dart'; // Add this import
 import 'astronaut_rescue_animation_component.dart'; // Add this import
 
 class AstronautComponent extends FloatingObjectComponent {
-  AstronautComponent({required double speed, required double rotationSpeed, required double size})
-      : super(speed: speed, rotationSpeed: rotationSpeed, size: size);
+  AstronautComponent({required double speed, required double rotationSpeed, required double size, required Vector2 fixedResolution})
+      : super(speed: speed, rotationSpeed: rotationSpeed, size: size, fixedResolution: fixedResolution); // Remove anchor from constructor
 
   @override
   Future<void> onLoad() async {
@@ -24,7 +24,8 @@ class AstronautComponent extends FloatingObjectComponent {
     );
 
     animation = spriteAnimation;
-    position = Vector2(gameRef.size.x, random.nextDouble() * gameRef.size.y); // Randomize the initial position
+    position = Vector2(fixedResolution.x, random.nextDouble() * fixedResolution.y); // Randomize the initial position
+    anchor = Anchor.center; // Set anchor to center
 
     // Add a hitbox for collision detection
     add(RectangleHitbox()..collisionType = CollisionType.passive);
@@ -36,7 +37,7 @@ class AstronautComponent extends FloatingObjectComponent {
     if (other is RocketComponent) {
       final game = gameRef as LousyRocketGame;
       game.incrementScore();
-      final rescueAnimation = AstronautRescueAnimationComponent(position);
+      final rescueAnimation = AstronautRescueAnimationComponent(position, fixedResolution: fixedResolution);
       game.add(rescueAnimation);
       removeFromParent(); // Remove the astronaut from the game
       print('Astronaut rescued! Score: ${game.score}');

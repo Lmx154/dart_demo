@@ -6,23 +6,28 @@ class ParallaxBackgroundComponent extends PositionComponent with HasGameRef<Flam
   late SpriteComponent background1;
   late SpriteComponent background2;
   double speed = 100; // Initial speed of the background movement
+  final Vector2 fixedResolution; // Add this field
+
+  ParallaxBackgroundComponent({required this.fixedResolution}) : super(); // Remove anchor from constructor
 
   @override
   Future<void> onLoad() async {
     // Load the background sprites
     background1 = SpriteComponent()
       ..sprite = await gameRef.loadSprite('background.png')
-      ..size = gameRef.size
+      ..size = fixedResolution
       ..position = Vector2(0, 0);
 
     background2 = SpriteComponent()
       ..sprite = await gameRef.loadSprite('background.png')
-      ..size = gameRef.size
-      ..position = Vector2(gameRef.size.x, 0);
+      ..size = fixedResolution
+      ..position = Vector2(fixedResolution.x, 0);
 
     // Add the background sprites to the component
     add(background1);
     add(background2);
+
+    anchor = Anchor.center; // Set anchor to center
   }
 
   @override
@@ -30,15 +35,15 @@ class ParallaxBackgroundComponent extends PositionComponent with HasGameRef<Flam
     super.update(dt);
 
     // Move the backgrounds to the left
-    background1.position.x -= speed * dt;
-    background2.position.x -= speed * dt;
+    background1.position.x -= speed * dt * (fixedResolution.x / 800); // Scale speed based on fixed resolution
+    background2.position.x -= speed * dt * (fixedResolution.x / 800); // Scale speed based on fixed resolution
 
     // Reset the position of the backgrounds when they go off-screen
-    if (background1.position.x <= -gameRef.size.x) {
-      background1.position.x = background2.position.x + gameRef.size.x;
+    if (background1.position.x <= -fixedResolution.x) {
+      background1.position.x = background2.position.x + fixedResolution.x;
     }
-    if (background2.position.x <= -gameRef.size.x) {
-      background2.position.x = background1.position.x + gameRef.size.x;
+    if (background2.position.x <= -fixedResolution.x) {
+      background2.position.x = background1.position.x + fixedResolution.x;
     }
   }
 
