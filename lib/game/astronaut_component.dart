@@ -9,8 +9,19 @@ import 'rocket_component.dart'; // Add this import
 import 'astronaut_rescue_animation_component.dart'; // Add this import
 
 class AstronautComponent extends FloatingObjectComponent {
-  AstronautComponent({required double speed, required double rotationSpeed, required double size, required Vector2 fixedResolution})
-      : super(speed: speed, rotationSpeed: rotationSpeed, size: size, fixedResolution: fixedResolution) {
+  bool isRescued = false; // Add this flag
+
+  AstronautComponent({
+    required double speed,
+    required double rotationSpeed,
+    required double size,
+    required Vector2 fixedResolution,
+  }) : super(
+          speed: speed,
+          rotationSpeed: rotationSpeed,
+          size: size,
+          fixedResolution: fixedResolution,
+        ) {
     this.size = Vector2(size, size); // Set size directly to ensure 100% size
   }
 
@@ -40,9 +51,10 @@ class AstronautComponent extends FloatingObjectComponent {
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (other is RocketComponent) {
+    if (!isRescued && other is RocketComponent) { // Check if not already rescued
+      isRescued = true; // Set flag to true
       final game = gameRef as LousyRocketGame;
-      game.incrementScore();
+      game.incrementScore(); // Increment score
       final rescueAnimation = AstronautRescueAnimationComponent(position, fixedResolution: fixedResolution);
       parent?.add(rescueAnimation); // Add rescue animation to the same parent
       removeFromParent(); // Remove the astronaut from the game

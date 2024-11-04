@@ -80,7 +80,6 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
     if (other is FloatingObjectComponent && other is! AstronautComponent) {
       // Handle collision with space debris
       collisionCount++;
-      game.updateCollisionMessage('Collision detected! Count: $collisionCount');
       print('Collision with space debris! Count: $collisionCount');
 
       // Replace rocket with explosion animation and stop the game

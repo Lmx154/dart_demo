@@ -5,9 +5,9 @@ import 'package:flame/components.dart';
 import 'rocket_component.dart';
 import 'parallax_background_component.dart';
 import 'floating_object_component.dart';
-import 'astronaut_component.dart'; // Add this import
+import 'astronaut_component.dart';
 import 'dart:math';
-import 'package:flutter/material.dart'; // Add this import for TextStyle
+import 'package:flutter/material.dart';
 
 class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection {
   late RocketComponent rocket;
@@ -17,7 +17,6 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   double timeSinceLastAstronautSpawn = 0; // Timer for astronaut spawns
   double spawnInterval = 2; // Initial interval in seconds between spawns
   double astronautSpawnInterval = 5; // Initial interval in seconds between astronaut spawns
-  late TextComponent collisionMessage; // Text component for collision message
   late TextComponent scoreMessage; // Text component for score message
   bool isGameOver = false; // Flag to check if the game is over
   int score = 0; // Score counter
@@ -59,20 +58,6 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
       fixedResolution: fixedResolution,
     );
     world.add(rocket);
-
-    // Initialize and add the collision message text component
-    collisionMessage = TextComponent(
-      text: '',
-      position: Vector2(fixedResolution.x / 2, 20), // Centered horizontally in the fixed resolution
-      anchor: Anchor.center,
-      textRenderer: TextPaint(
-        style: TextStyle(
-          color: Colors.red,
-          fontSize: 16,
-        ),
-      ),
-    );
-    world.add(collisionMessage);
 
     // Initialize and add the score message text component
     scoreMessage = TextComponent(
@@ -159,12 +144,7 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
     astronautSpawnInterval = max(1.0, 5 - score * 0.1); // Adjust astronaut spawn interval based on score
   }
 
-  // Method to update the collision message text
-  void updateCollisionMessage(String message) {
-    collisionMessage.text = message;
-  }
-
-  // Method to increment the score
+  // Method to update the score
   void incrementScore() {
     score++;
     scoreMessage.text = 'Score: $score';
@@ -196,11 +176,9 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
     );
     world.add(rocket);
 
-    world.add(collisionMessage);
     world.add(scoreMessage);
 
-    // Reset collision message and score message
-    collisionMessage.text = '';
+    // Reset score message
     scoreMessage.text = 'Score: $score';
 
     // Remove the GameOver overlay

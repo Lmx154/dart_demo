@@ -16,9 +16,9 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
     required double size,
     required this.fixedResolution,
   }) : super(
-          size: Vector2.zero(), // Initialize size to zero
-          anchor: Anchor.center, // Set component anchor to center
-        ) {
+        size: Vector2.zero(), // Initialize size to zero
+        anchor: Anchor.center, // Set component anchor to center
+      ) {
     // Compute the random size multiplier
     final randomSizeMultiplier = 1.25 + random.nextDouble() * 1.75;
     // Set the size in the constructor body
