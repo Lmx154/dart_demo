@@ -96,7 +96,10 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   @override
   void update(double dt) {
     super.update(dt);
-    if (isGameOver) return; // Stop updating if the game is over
+    if (isGameOver) {
+      overlays.add('GameOver');
+      return; // Stop updating if the game is over
+    }
 
     // Example: Update the background speed based on a hypothetical score
     background.updateSpeed(score);
@@ -184,17 +187,23 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
 
     // Re-add essential components
     world.add(background);
+
+    // Recreate the rocket component to ensure a fresh state
+    rocket = RocketComponent(
+      gravity: gravity,
+      jumpStrength: jumpStrength,
+      fixedResolution: fixedResolution,
+    );
     world.add(rocket);
+
     world.add(collisionMessage);
     world.add(scoreMessage);
-
-    // Reset rocket position and velocity
-    rocket.position = Vector2(fixedResolution.x / 2, fixedResolution.y / 2);
-    rocket.velocity = 0;
-    rocket.collisionCount = 0; // Reset collision count
 
     // Reset collision message and score message
     collisionMessage.text = '';
     scoreMessage.text = 'Score: $score';
+
+    // Remove the GameOver overlay
+    overlays.remove('GameOver');
   }
 }

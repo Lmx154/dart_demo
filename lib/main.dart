@@ -1,9 +1,19 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
-import 'config/routes.dart';
+import 'package:flame/game.dart';
+import 'game/lousy_rocket_game.dart';
+import 'overlays/game_over.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    GameWidget<LousyRocketGame>.controlled(
+      gameFactory: LousyRocketGame.new,
+      overlayBuilderMap: {
+        'GameOver': (_, game) => GameOver(game: game),
+      },
+      initialActiveOverlays: const [],
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,8 +24,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
-      routes: getAppRoutes(),
+      home: Scaffold(
+        body: GameWidget(game: LousyRocketGame()),
+      ),
     );
   }
 }

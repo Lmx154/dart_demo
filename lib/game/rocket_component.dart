@@ -88,11 +88,6 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
       parent?.add(explosion); // Add explosion to the same parent
       removeFromParent();
       game.stopGame();
-
-      // Trigger the game reset after a delay
-      Future.delayed(Duration(seconds: 3), () {
-        game.resetGame();
-      });
     }
   }
 }
