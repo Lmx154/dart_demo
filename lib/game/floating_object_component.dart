@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/game.dart';
 import 'dart:math';
+import 'game_config.dart'; // Add this import
 
 class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<FlameGame>, CollisionCallbacks {
   final double speed;
@@ -15,7 +16,8 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
   Future<void> onLoad() async {
     await super.onLoad();
     animation = await loadAnimation();
-    position = Vector2(gameRef.size.x, random.nextDouble() * gameRef.size.y);
+    // Ensure the position is within the fixed resolution
+    position = GameConfig.getRandomPosition(gameRef.size, size);
 
     // Add a hitbox for collision detection
     add(RectangleHitbox()..collisionType = CollisionType.passive);

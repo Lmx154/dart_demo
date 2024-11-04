@@ -1,6 +1,7 @@
 // lib/game/parallax_background_component.dart
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'game_config.dart'; // Add this import
 
 class ParallaxBackgroundComponent extends PositionComponent with HasGameRef<FlameGame> {
   late SpriteComponent background1;
@@ -9,16 +10,18 @@ class ParallaxBackgroundComponent extends PositionComponent with HasGameRef<Flam
 
   @override
   Future<void> onLoad() async {
-    // Load the background sprites
+    final gameSize = Vector2(GameConfig.fixedWidth, GameConfig.fixedHeight); // Use fixed resolution size
+
+    // Load and scale the background sprites to fully cover the screen dynamically
     background1 = SpriteComponent()
       ..sprite = await gameRef.loadSprite('background.png')
-      ..size = gameRef.size
-      ..position = Vector2(0, 0);
+      ..size = gameSize // Set size to match the fixed resolution dimensions
+      ..position = Vector2(0, 0); // Position at the top-left
 
     background2 = SpriteComponent()
       ..sprite = await gameRef.loadSprite('background.png')
-      ..size = gameRef.size
-      ..position = Vector2(gameRef.size.x, 0);
+      ..size = gameSize // Set size to match the fixed resolution dimensions
+      ..position = Vector2(gameSize.x, 0); // Position next to the first background horizontally
 
     // Add the background sprites to the component
     add(background1);
@@ -34,11 +37,11 @@ class ParallaxBackgroundComponent extends PositionComponent with HasGameRef<Flam
     background2.position.x -= speed * dt;
 
     // Reset the position of the backgrounds when they go off-screen
-    if (background1.position.x <= -gameRef.size.x) {
-      background1.position.x = background2.position.x + gameRef.size.x;
+    if (background1.position.x <= -background1.size.x) {
+      background1.position.x = background2.position.x + background2.size.x;
     }
-    if (background2.position.x <= -gameRef.size.x) {
-      background2.position.x = background1.position.x + gameRef.size.x;
+    if (background2.position.x <= -background2.size.x) {
+      background2.position.x = background1.position.x + background1.size.x;
     }
   }
 

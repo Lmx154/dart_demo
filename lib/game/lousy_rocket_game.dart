@@ -5,10 +5,11 @@ import 'package:flame/components.dart';
 import 'rocket_component.dart';
 import 'parallax_background_component.dart';
 import 'floating_object_component.dart';
-import 'astronaut_component.dart'; // Add this import
+import 'astronaut_component.dart';
 import 'dart:math';
-import 'package:flutter/material.dart'; // Add this import for TextStyle
-import 'package:flame/experimental.dart'; // Ensure this import
+import 'package:flutter/material.dart';
+import 'package:flame/experimental.dart';
+import 'game_config.dart'; // Add this import
 
 class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection {
   late RocketComponent rocket;
@@ -30,33 +31,34 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
   double baseObjectSize = 50;
   double speedIncrement = 10; // Speed increment based on score
 
+  late World world; // Declare world as a class member
+
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    final world = World();
+    world = World();
     add(world);
 
-    final cameraComponent = CameraComponent.withFixedResolution(
-      width: 1080,
-      height: 1920,
-      world: world,
-    );
+    // Create and add the camera component using GameConfig
+    final cameraComponent = GameConfig.createCameraComponent(world);
     add(cameraComponent);
 
+    // Load and add the background
     background = ParallaxBackgroundComponent();
     world.add(background);
 
-    rocket = RocketComponent(
-      gravity: baseGravity, // Use fixed values
-      jumpStrength: baseJumpStrength,
-    );
+    // Load and add the rocket
+    rocket = RocketComponent(gravity: baseGravity, jumpStrength: baseJumpStrength);
     world.add(rocket);
+
+    // Remove the camera follow call
+    // cameraComponent.follow(rocket);
 
     // Initialize and add the collision message text component
     collisionMessage = TextComponent(
       text: '',
-      position: Vector2(540, 20), // 1080 / 2 = 540
+      position: GameConfig.getCenteredPosition(Vector2(GameConfig.fixedWidth, 40), Vector2(200, 20)),
       anchor: Anchor.center,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -70,7 +72,7 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
     // Initialize and add the score message text component
     scoreMessage = TextComponent(
       text: 'Score: $score',
-      position: Vector2(540, 50), // 1080 / 2 = 540
+      position: GameConfig.getCenteredPosition(Vector2(GameConfig.fixedWidth, 70), Vector2(200, 20)),
       anchor: Anchor.center,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -140,7 +142,7 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
             size: baseObjectSize,
           );
 
-    add(object);
+    world.add(object); // Add to the world
   }
 
   void spawnAstronaut() {
@@ -153,7 +155,7 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
       size: baseObjectSize * 0.6,
     );
 
-    add(astronaut);
+    world.add(astronaut); // Add to the world
   }
 
   void updateSpawnRate(int score) {

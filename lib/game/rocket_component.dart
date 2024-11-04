@@ -5,6 +5,7 @@ import 'floating_object_component.dart';
 import 'astronaut_component.dart'; // Add this import
 import 'explosion_component.dart'; // Add this import
 import 'lousy_rocket_game.dart'; // Add this import
+import 'game_config.dart'; // Add this import
 
 class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, CollisionCallbacks {
   final double gravity;
@@ -18,7 +19,8 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
   Future<void> onLoad() async {
     await super.onLoad();
     sprite = await gameRef.loadSprite('rocket.png');
-    position = Vector2(gameRef.size.x / 2 - 25, gameRef.size.y / 2 - 25);
+    // Center the rocket in the fixed resolution
+    position = GameConfig.getCenteredPosition(gameRef.size, size);
 
     // Add a hitbox for collision detection
     add(RectangleHitbox()..collisionType = CollisionType.active);

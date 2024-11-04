@@ -2,6 +2,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/game.dart';
+import 'game_config.dart'; // Add this import
 
 class AstronautRescueAnimationComponent extends SpriteAnimationComponent with HasGameRef<FlameGame> {
   AstronautRescueAnimationComponent(Vector2 position) : super(position: position, size: Vector2.all(50));
