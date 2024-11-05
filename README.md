@@ -34,7 +34,7 @@ sudo dnf install ninja-build cmake clang gtk3-devel
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/Lmx154/dart_demo_web.git
+git clone https://github.com/Lmx154/dart_demo.git
 ```
 
 ### 2. Open your IDE/Editor in the project directory
@@ -48,6 +48,13 @@ code .
 
 ### 3. Run the following command to start the web server
 ```bash
-flutter run -d web-server
+flutter run -d web-server --web-port=8000
 ```
+### 4. To deploy webapp
+```bash
+flutter build web
 ```
+This will get your files ready for deployment
+
+here is the link to the firebase deployment of this game: https://flutter-demo-f2024.web.app/
+
