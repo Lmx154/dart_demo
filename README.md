@@ -29,6 +29,10 @@ flutter doctor
 ```bash
 sudo dnf install ninja-build cmake clang gtk3-devel
 ```
+### 6. Check your install
+```bash
+flutter --version
+```
 
 ## Running website
 

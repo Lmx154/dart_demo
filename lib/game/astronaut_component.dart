@@ -37,25 +37,31 @@ class AstronautComponent extends FloatingObjectComponent {
     );
 
     animation = spriteAnimation;
-    position = Vector2(fixedResolution.x, random.nextDouble() * fixedResolution.y); // Randomize the initial position
+    position = Vector2(
+        fixedResolution.x,
+        random.nextDouble() *
+            fixedResolution.y); // Randomize the initial position
     anchor = Anchor.center; // Set anchor to center
 
     // Add a hitbox for collision detection
     add(RectangleHitbox()
-      ..position = Vector2.zero() // Position at the component's origin (center)
-      ..collisionType = CollisionType.passive
-      //..debugMode = true
-      ); // Enable debug mode
+          ..position =
+              Vector2.zero() // Position at the component's origin (center)
+          ..collisionType = CollisionType.passive
+        //..debugMode = true
+        ); // Enable debug mode
   }
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (!isRescued && other is RocketComponent) { // Check if not already rescued
+    if (!isRescued && other is RocketComponent) {
+      // Check if not already rescued
       isRescued = true; // Set flag to true
       final game = gameRef as LousyRocketGame;
       game.incrementScore(); // Increment score
-      final rescueAnimation = AstronautRescueAnimationComponent(position, fixedResolution: fixedResolution);
+      final rescueAnimation = AstronautRescueAnimationComponent(position,
+          fixedResolution: fixedResolution);
       parent?.add(rescueAnimation); // Add rescue animation to the same parent
       removeFromParent(); // Remove the astronaut from the game
       print('Astronaut rescued! Score: ${game.score}');

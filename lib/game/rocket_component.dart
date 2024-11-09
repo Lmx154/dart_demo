@@ -7,15 +7,20 @@ import 'explosion_component.dart'; // Add this import
 import 'lousy_rocket_game.dart'; // Add this import
 import 'dart:async'; // Add this import
 
-class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, CollisionCallbacks {
+class RocketComponent extends SpriteComponent
+    with HasGameRef<FlameGame>, CollisionCallbacks {
   final double gravity;
   final double jumpStrength;
   final Vector2 fixedResolution; // Add this field
   double velocity = 0;
   int collisionCount = 0; // Collision counter
 
-  RocketComponent({required this.gravity, required this.jumpStrength, required this.fixedResolution})
-      : super(size: Vector2(60, 60) * (fixedResolution.y / 1080)) { // Increase size by 20%
+  RocketComponent(
+      {required this.gravity,
+      required this.jumpStrength,
+      required this.fixedResolution})
+      : super(size: Vector2(60, 60) * (fixedResolution.y / 1080)) {
+    // Increase size by 20%
     anchor = Anchor.center; // Set anchor to center
   }
 
@@ -23,14 +28,15 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
   Future<void> onLoad() async {
     await super.onLoad();
     sprite = await gameRef.loadSprite('rocket.png');
-    position = Vector2(fixedResolution.x / 2, fixedResolution.y / 2); // Using fixedResolution to position the rocket
+    position = Vector2(fixedResolution.x / 2,
+        fixedResolution.y / 2); // Using fixedResolution to position the rocket
 
     // Add a circular hitbox centered on the component
     final hitbox = CircleHitbox()
       ..radius = size.x * 0.2 // Reduce radius to 20% of the component size
       ..position = Vector2.zero() // Center the hitbox
       ..collisionType = CollisionType.active;
-      //..debugMode = true;
+    //..debugMode = true;
 
     add(hitbox);
   }
@@ -83,7 +89,8 @@ class RocketComponent extends SpriteComponent with HasGameRef<FlameGame>, Collis
       print('Collision with space debris! Count: $collisionCount');
 
       // Replace rocket with explosion animation and stop the game
-      final explosion = ExplosionComponent(position, fixedResolution: fixedResolution);
+      final explosion =
+          ExplosionComponent(position, fixedResolution: fixedResolution);
       parent?.add(explosion); // Add explosion to the same parent
       removeFromParent();
       game.stopGame();

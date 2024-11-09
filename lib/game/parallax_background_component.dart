@@ -2,13 +2,14 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 
-class ParallaxBackgroundComponent extends PositionComponent with HasGameRef<FlameGame> {
+class ParallaxBackgroundComponent extends PositionComponent
+    with HasGameRef<FlameGame> {
   late SpriteComponent background1;
   late SpriteComponent background2;
   double speed = 100; // Initial speed of the background movement
   final Vector2 fixedResolution; // Add this field
 
-  ParallaxBackgroundComponent({required this.fixedResolution}) : super(); // Remove anchor from constructor
+  ParallaxBackgroundComponent({required this.fixedResolution}) : super();
 
   @override
   Future<void> onLoad() async {
@@ -16,7 +17,7 @@ class ParallaxBackgroundComponent extends PositionComponent with HasGameRef<Flam
     background1 = SpriteComponent()
       ..sprite = await gameRef.loadSprite('background.png')
       ..size = fixedResolution
-      ..position = Vector2(0, 0);
+      ..position = Vector2.zero();
 
     background2 = SpriteComponent()
       ..sprite = await gameRef.loadSprite('background.png')
@@ -35,8 +36,12 @@ class ParallaxBackgroundComponent extends PositionComponent with HasGameRef<Flam
     super.update(dt);
 
     // Move the backgrounds to the left
-    background1.position.x -= speed * dt * (fixedResolution.x / 800); // Scale speed based on fixed resolution
-    background2.position.x -= speed * dt * (fixedResolution.x / 800); // Scale speed based on fixed resolution
+    background1.position.x -= speed *
+        dt *
+        (fixedResolution.x / 800); // Scale speed based on fixed resolution
+    background2.position.x -= speed *
+        dt *
+        (fixedResolution.x / 800); // Scale speed based on fixed resolution
 
     // Reset the position of the backgrounds when they go off-screen
     if (background1.position.x <= -fixedResolution.x) {

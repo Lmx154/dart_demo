@@ -4,7 +4,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/game.dart';
 import 'dart:math';
 
-class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<FlameGame>, CollisionCallbacks {
+class FloatingObjectComponent extends SpriteAnimationComponent
+    with HasGameRef<FlameGame>, CollisionCallbacks {
   final double speed;
   final double rotationSpeed;
   final Random random = Random();
@@ -16,9 +17,9 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
     required double size,
     required this.fixedResolution,
   }) : super(
-        size: Vector2.zero(), // Initialize size to zero
-        anchor: Anchor.center, // Set component anchor to center
-      ) {
+          size: Vector2.zero(), // Initialize size to zero
+          anchor: Anchor.center, // Set component anchor to center
+        ) {
     // Compute the random size multiplier
     final randomSizeMultiplier = 1.25 + random.nextDouble() * 1.75;
     // Set the size in the constructor body
@@ -29,7 +30,8 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
   Future<void> onLoad() async {
     await super.onLoad();
     final image = await gameRef.images.load('asteroid.png');
-    final spriteSize = Vector2(64, 64); // Size of each frame in the sprite sheet
+    final spriteSize =
+        Vector2(64, 64); // Size of each frame in the sprite sheet
     final spriteAnimation = SpriteAnimation.fromFrameData(
       image,
       SpriteAnimationData.sequenced(
@@ -40,22 +42,27 @@ class FloatingObjectComponent extends SpriteAnimationComponent with HasGameRef<F
     );
 
     animation = spriteAnimation;
-    position = Vector2(fixedResolution.x, random.nextDouble() * fixedResolution.y); // Randomize the initial position
+    position = Vector2(
+        fixedResolution.x,
+        random.nextDouble() *
+            fixedResolution.y); // Randomize the initial position
 
     // Add a circular hitbox centered on the component
-    add(
-      CircleHitbox()
-        ..radius = size.x * 0.4 // Set radius based on component size
-        ..position = Vector2.zero() // Position at the component's origin (center)
-        ..collisionType = CollisionType.passive
+    add(CircleHitbox()
+          ..radius = size.x * 0.4 // Set radius based on component size
+          ..position =
+              Vector2.zero() // Position at the component's origin (center)
+          ..collisionType = CollisionType.passive
         //..debugMode = true,
-    );
+        );
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    position.x -= speed * dt * (fixedResolution.x / 800); // Scale speed based on fixed resolution
+    position.x -= speed *
+        dt *
+        (fixedResolution.x / 800); // Scale speed based on fixed resolution
 
     // Spin the asteroid in place
     angle += rotationSpeed * dt;

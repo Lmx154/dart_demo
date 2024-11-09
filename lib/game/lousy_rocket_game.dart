@@ -9,14 +9,16 @@ import 'astronaut_component.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection {
+class LousyRocketGame extends FlameGame
+    with TapDetector, HasCollisionDetection {
   late RocketComponent rocket;
   late ParallaxBackgroundComponent background;
   final Random random = Random();
   double timeSinceLastSpawn = 0;
   double timeSinceLastAstronautSpawn = 0; // Timer for astronaut spawns
   double spawnInterval = 2; // Initial interval in seconds between spawns
-  double astronautSpawnInterval = 5; // Initial interval in seconds between astronaut spawns
+  double astronautSpawnInterval =
+      5; // Initial interval in seconds between astronaut spawns
   late TextComponent scoreMessage; // Text component for score message
   bool isGameOver = false; // Flag to check if the game is over
   int score = 0; // Score counter
@@ -41,13 +43,31 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
       width: fixedResolution.x,
       height: fixedResolution.y,
     );
-    camera.viewfinder.position = fixedResolution / 2; // Center the camera on the fixed resolution
+    camera.viewfinder.position =
+        fixedResolution / 2; // Center the camera on the fixed resolution
   }
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
     add(world);
     add(camera);
+
+    // Adjust the camera viewport based on device aspect ratio
+    final deviceAspectRatio = size.x / size.y;
+    final fixedAspectRatio = fixedResolution.x / fixedResolution.y;
+
+    if (deviceAspectRatio > fixedAspectRatio) {
+      camera.viewfinder.scale = Vector2(
+        size.x / fixedResolution.x,
+        size.x / fixedResolution.x,
+      );
+    } else {
+      camera.viewfinder.scale = Vector2(
+        size.y / fixedResolution.y,
+        size.y / fixedResolution.y,
+      );
+    }
 
     background = ParallaxBackgroundComponent(fixedResolution: fixedResolution);
     world.add(background);
@@ -62,7 +82,8 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
     // Initialize and add the score message text component
     scoreMessage = TextComponent(
       text: 'Score: $score',
-      position: Vector2(fixedResolution.x / 2, 50), // Centered horizontally in the fixed resolution
+      position: Vector2(fixedResolution.x / 2,
+          50), // Centered horizontally in the fixed resolution
       anchor: Anchor.center,
       textRenderer: TextPaint(
         style: TextStyle(
@@ -116,11 +137,13 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
 
   void spawnFloatingObject() {
     final speed = getCurrentSpeed();
-    final rotationSpeed = (random.nextDouble() - 0.5) * 2; // Random rotation speed
+    final rotationSpeed =
+        (random.nextDouble() - 0.5) * 2; // Random rotation speed
     final floatingObject = FloatingObjectComponent(
       speed: speed,
       rotationSpeed: rotationSpeed,
-      size: objectSize * (fixedResolution.y / 1080), // Scale size based on fixed resolution
+      size: objectSize *
+          (fixedResolution.y / 1080), // Scale size based on fixed resolution
       fixedResolution: fixedResolution,
     );
     world.add(floatingObject);
@@ -128,11 +151,14 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
 
   void spawnAstronaut() {
     final speed = getCurrentSpeed();
-    final rotationSpeed = (random.nextDouble() - 0.5) * 2; // Random rotation speed
+    final rotationSpeed =
+        (random.nextDouble() - 0.5) * 2; // Random rotation speed
     final astronaut = AstronautComponent(
       speed: speed,
       rotationSpeed: rotationSpeed,
-      size: objectSize * 0.6 * (fixedResolution.y / 1080), // Scale size based on fixed resolution
+      size: objectSize *
+          0.6 *
+          (fixedResolution.y / 1080), // Scale size based on fixed resolution
       fixedResolution: fixedResolution,
     );
     world.add(astronaut);
@@ -140,8 +166,10 @@ class LousyRocketGame extends FlameGame with TapDetector, HasCollisionDetection 
 
   void updateSpawnRate(int score) {
     // Decrease the spawn interval as the score increases
-    spawnInterval = max(0.5, 2 - score * 0.05); // Minimum interval of 0.5 seconds
-    astronautSpawnInterval = max(1.0, 5 - score * 0.1); // Adjust astronaut spawn interval based on score
+    spawnInterval =
+        max(0.5, 2 - score * 0.05); // Minimum interval of 0.5 seconds
+    astronautSpawnInterval = max(
+        1.0, 5 - score * 0.1); // Adjust astronaut spawn interval based on score
   }
 
   // Method to update the score
