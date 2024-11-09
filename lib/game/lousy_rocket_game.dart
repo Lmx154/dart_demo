@@ -8,6 +8,7 @@ import 'floating_object_component.dart';
 import 'astronaut_component.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../overlays/game_over.dart'; // Add this import
 
 class LousyRocketGame extends FlameGame
     with TapDetector, HasCollisionDetection {
@@ -211,5 +212,25 @@ class LousyRocketGame extends FlameGame
 
     // Remove the GameOver overlay
     overlays.remove('GameOver');
+  }
+}
+
+class LousyRocketGameWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final game = LousyRocketGame();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Lousy Rocket Game'),
+      ),
+      body: GameWidget(
+        game: game,
+        overlayBuilderMap: {
+          'GameOver': (context, game) =>
+              GameOver(game: game as LousyRocketGame),
+        },
+        initialActiveOverlays: const [],
+      ),
+    );
   }
 }

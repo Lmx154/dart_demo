@@ -40,7 +40,8 @@ class GameOver extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     game.resetGame();
-                    game.overlays.remove('GameOver');
+                    // game.overlays.remove('GameOver');
+                    // Navigator.pop(context); // Navigate back to Home Page
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: whiteTextColor,

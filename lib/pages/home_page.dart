@@ -49,9 +49,20 @@ class HomePage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Text(
-          'Welcome to the Home Page!',
-          style: TextStyle(fontSize: 24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Welcome to the Home Page!',
+              style: TextStyle(fontSize: 24),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/rocket');
+              },
+              child: Text('Start Game'),
+            ),
+          ],
         ),
       ),
     );

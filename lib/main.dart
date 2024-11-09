@@ -3,17 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'game/lousy_rocket_game.dart';
 import 'overlays/game_over.dart';
+import 'pages/home_page.dart';
+import 'pages/about_page.dart';
 
 void main() {
-  runApp(
-    GameWidget<LousyRocketGame>.controlled(
-      gameFactory: LousyRocketGame.new,
-      overlayBuilderMap: {
-        'GameOver': (_, game) => GameOver(game: game),
-      },
-      initialActiveOverlays: const [],
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -24,9 +18,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        body: GameWidget(game: LousyRocketGame()),
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/about': (context) => AboutPage(),
+        '/rocket': (context) => LousyRocketGameWidget(),
+      },
     );
   }
 }
