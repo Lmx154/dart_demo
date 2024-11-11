@@ -62,3 +62,15 @@ This will get your files ready for deployment
 
 here is the link to the firebase deployment of this game: https://flutter-demo-f2024.web.app/
 
+### More setup stuff
+You if you're testing API related functionality, then you will have to add .env files in the web directory and the project's root directory
+These .env files must contain this if you are testing them with the dotnet backend. ```bash BASE_URL=http://localhost:5000 ```
+Make sure the dotnet backend is running on the correct port before testing for any score related functionality.
+
+If you're having build issues try these commands in order
+- ```bash
+flutter clean
+```
+- ```bash
+flutter pub get
+```

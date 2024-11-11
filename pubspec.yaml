@@ -12,6 +12,9 @@ dependencies:
     sdk: flutter
   flame: ^1.0.0
   cupertino_icons: ^1.0.8
+  http: ^0.13.5
+  flutter_dotenv: ^5.0.2
+  dwds: ^24.0.0 # Updated to support null safety
 
 dev_dependencies:
   flutter_test:
@@ -22,3 +25,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - .env # Added .env as an asset
+
+dependency_overrides:
+  dwds: ^24.0.0 # Ensure dwds is at least version 24.0.0
+
