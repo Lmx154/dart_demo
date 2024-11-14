@@ -6,10 +6,11 @@ import 'game/lousy_rocket_game.dart';
 import 'overlays/game_over.dart';
 import 'pages/home_page.dart';
 import 'pages/about_page.dart';
+import 'config/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: ".env"); // Ensure .env file is loaded
   runApp(MyApp());
 }
 
@@ -22,11 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/',
-      routes: {
-        '/': (context) => HomePage(),
-        '/about': (context) => AboutPage(),
-        '/rocket': (context) => LousyRocketGameWidget(),
-      },
+      routes: getAppRoutes(), // Use the routes from the routes configuration
     );
   }
 }

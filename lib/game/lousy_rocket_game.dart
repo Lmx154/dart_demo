@@ -9,6 +9,7 @@ import 'astronaut_component.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../overlays/game_over.dart'; // Add this import
+import 'api_service.dart'; // Add this import
 
 class LousyRocketGame extends FlameGame
     with TapDetector, HasCollisionDetection {
@@ -36,6 +37,8 @@ class LousyRocketGame extends FlameGame
 
   // Define the fixed resolution
   final Vector2 fixedResolution = Vector2(800, 600);
+
+  final ApiService apiService = ApiService(); // Remove base URL argument
 
   LousyRocketGame() {
     world = World();
@@ -94,6 +97,8 @@ class LousyRocketGame extends FlameGame
       ),
     );
     world.add(scoreMessage);
+
+    overlays.addEntry('GameOver', (context, game) => GameOver(game: this));
   }
 
   double getCurrentSpeed() {
@@ -182,6 +187,17 @@ class LousyRocketGame extends FlameGame
   // Method to stop the game
   void stopGame() {
     isGameOver = true;
+    // Remove the submitScore call
+    // submitScore(); // Submit the score when the game is over
+  }
+
+  Future<void> submitScore() async {
+    final response = await apiService.postRequest('/api/Leaderboard', {'score': score});
+    if (response.statusCode == 200) {
+      print('Score submitted successfully');
+    } else {
+      print('Failed to submit score');
+    }
   }
 
   void resetGame() {
@@ -212,6 +228,10 @@ class LousyRocketGame extends FlameGame
 
     // Remove the GameOver overlay
     overlays.remove('GameOver');
+  }
+
+  void endGame() {
+    overlays.add('GameOver');
   }
 }
 

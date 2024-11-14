@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../game/lousy_rocket_game.dart';
-import '../services/api_service.dart';
+import '../services/api_service.dart'; // Ensure correct import path
 
 class GameOver extends StatefulWidget {
   final LousyRocketGame game;
@@ -12,8 +12,7 @@ class GameOver extends StatefulWidget {
 
 class _GameOverState extends State<GameOver> {
   final TextEditingController _nameController = TextEditingController();
-  final ApiService _apiService = ApiService();
-  List<Map<String, dynamic>> leaderboard = [];
+  final ApiService _apiService = ApiService(); // Ensure correct instantiation
   bool isLoading = false;
   String? errorMessage;
 
@@ -27,7 +26,7 @@ class _GameOverState extends State<GameOver> {
       child: Center(
         child: Container(
           padding: const EdgeInsets.all(10.0),
-          height: 400, // Increased height to accommodate leaderboard
+          height: 300, // Adjusted height
           width: 300,
           decoration: const BoxDecoration(
             color: blackTextColor,
@@ -81,24 +80,12 @@ class _GameOverState extends State<GameOver> {
                   ),
                 ],
                 SizedBox(height: 20),
-                Text(
-                  'Leaderboard',
-                  style: TextStyle(
-                    color: whiteTextColor,
-                    fontSize: 20,
-                  ),
-                ),
-                SizedBox(height: 10),
-                _buildLeaderboard(),
-                SizedBox(height: 10),
                 SizedBox(
                   width: 200,
                   height: 75,
                   child: ElevatedButton(
                     onPressed: () {
                       widget.game.resetGame();
-                      // game.overlays.remove('GameOver');
-                      // Navigator.pop(context); // Navigate back to Home Page
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: whiteTextColor,
@@ -135,8 +122,7 @@ class _GameOverState extends State<GameOver> {
     });
 
     try {
-      await _apiService.submitScore(playerName, widget.game.score);
-      await _fetchLeaderboard();
+      await _apiService.postRequest('/api/Leaderboard', {'name': playerName, 'score': widget.game.score});
       setState(() {
         isLoading = false;
       });
@@ -147,50 +133,6 @@ class _GameOverState extends State<GameOver> {
         errorMessage = 'Failed to submit score.';
       });
     }
-  }
-
-  Future<void> _fetchLeaderboard() async {
-    try {
-      List<Map<String, dynamic>> scores = await _apiService.getLeaderboard();
-      setState(() {
-        leaderboard = scores;
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = 'Failed to fetch leaderboard.';
-      });
-    }
-  }
-
-  Widget _buildLeaderboard() {
-    if (isLoading) {
-      return CircularProgressIndicator();
-    }
-
-    if (leaderboard.isEmpty) {
-      return Text(
-        'No scores yet.',
-        style: TextStyle(color: Colors.white),
-      );
-    }
-
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: leaderboard.length,
-      itemBuilder: (context, index) {
-        final entry = leaderboard[index];
-        return ListTile(
-          title: Text(
-            entry['name'],
-            style: TextStyle(color: Colors.white),
-          ),
-          trailing: Text(
-            entry['score'].toString(),
-            style: TextStyle(color: Colors.white),
-          ),
-        );
-      },
-    );
   }
 
   @override
