@@ -1,5 +1,6 @@
 // lib/pages/home_page.dart
 import 'package:flutter/material.dart';
+import '../game/api_service.dart'; // Update the import path
 
 class HomePage extends StatelessWidget {
   @override
