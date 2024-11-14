@@ -74,22 +74,38 @@ class _HomePageState extends State<HomePage> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Text('No players found');
             } else {
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: const [
-                    DataColumn(label: Text('Player ID')),
-                    DataColumn(label: Text('Username')),
-                    DataColumn(label: Text('Score')),
-                  ],
-                  rows: snapshot.data!.map((player) {
-                    return DataRow(cells: [
-                      DataCell(Text(player.playerId.toString())),
-                      DataCell(Text(player.username)),
-                      DataCell(Text(player.playerScore.toString())),
-                    ]);
-                  }).toList(),
-                ),
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Leaderboard',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(label: Text('Player ID')),
+                          DataColumn(label: Text('Username')),
+                          DataColumn(label: Text('Score')),
+                        ],
+                        rows: snapshot.data!.map((player) {
+                          return DataRow(cells: [
+                            DataCell(Text(player.playerId.toString())),
+                            DataCell(Text(player.username)),
+                            DataCell(Text(player.playerScore.toString())),
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ],
               );
             }
           },
