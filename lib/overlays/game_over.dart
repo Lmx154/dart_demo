@@ -12,6 +12,7 @@ class GameOver extends StatefulWidget {
 
 class _GameOverState extends State<GameOver> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _idController = TextEditingController(); // Add this controller
   final ApiService _apiService = ApiService(); // Ensure correct instantiation
   bool isLoading = false;
   String? errorMessage;
@@ -26,7 +27,7 @@ class _GameOverState extends State<GameOver> {
       child: Center(
         child: Container(
           padding: const EdgeInsets.all(10.0),
-          height: 300, // Adjusted height
+          height: 350, // Adjusted height
           width: 300,
           decoration: const BoxDecoration(
             color: blackTextColor,
@@ -58,7 +59,20 @@ class _GameOverState extends State<GameOver> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: TextField(
+                    controller: _idController, // Add this TextField
+                    decoration: InputDecoration(
+                      labelText: 'Player ID',
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: 200,
                   height: 50,
@@ -73,13 +87,13 @@ class _GameOverState extends State<GameOver> {
                   ),
                 ),
                 if (errorMessage != null) ...[
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     errorMessage!,
                     style: TextStyle(color: Colors.red),
                   ),
                 ],
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: 200,
                   height: 75,
@@ -109,9 +123,10 @@ class _GameOverState extends State<GameOver> {
 
   Future<void> _submitScore() async {
     String playerName = _nameController.text.trim();
-    if (playerName.isEmpty) {
+    String playerId = _idController.text.trim(); // Get the player ID
+    if (playerName.isEmpty || playerId.isEmpty) {
       setState(() {
-        errorMessage = 'Player name cannot be empty.';
+        errorMessage = 'Player name and ID cannot be empty.';
       });
       return;
     }
@@ -122,7 +137,11 @@ class _GameOverState extends State<GameOver> {
     });
 
     try {
-      await _apiService.postRequest('/api/Leaderboard', {'name': playerName, 'score': widget.game.score});
+      await _apiService.postRequest('/api/Leaderboard', {
+        'PlayerId': int.parse(playerId), // Ensure the key matches the expected format
+        'Username': playerName, // Ensure the key matches the expected format
+        'PlayerScore': widget.game.score // Ensure the key matches the expected format
+      });
       setState(() {
         isLoading = false;
       });
@@ -138,6 +157,7 @@ class _GameOverState extends State<GameOver> {
   @override
   void dispose() {
     _nameController.dispose();
+    _idController.dispose(); // Dispose the ID controller
     super.dispose();
   }
 }
