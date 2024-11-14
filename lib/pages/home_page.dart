@@ -1,8 +1,22 @@
 // lib/pages/home_page.dart
 import 'package:flutter/material.dart';
-import '../game/api_service.dart'; // Update the import path
+import '../services/api_service.dart'; // Update the import path
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ApiService _apiService = ApiService();
+  late Future<List<Player>> _players;
+
+  @override
+  void initState() {
+    super.initState();
+    _players = _apiService.getPlayers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,20 +64,35 @@ class HomePage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome to the Home Page!',
-              style: TextStyle(fontSize: 24),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/rocket');
-              },
-              child: Text('Start Game'),
-            ),
-          ],
+        child: FutureBuilder<List<Player>>(
+          future: _players,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Text('No players found');
+            } else {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: const [
+                    DataColumn(label: Text('Player ID')),
+                    DataColumn(label: Text('Username')),
+                    DataColumn(label: Text('Score')),
+                  ],
+                  rows: snapshot.data!.map((player) {
+                    return DataRow(cells: [
+                      DataCell(Text(player.playerId.toString())),
+                      DataCell(Text(player.username)),
+                      DataCell(Text(player.playerScore.toString())),
+                    ]);
+                  }).toList(),
+                ),
+              );
+            }
+          },
         ),
       ),
     );

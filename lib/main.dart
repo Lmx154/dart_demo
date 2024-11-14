@@ -22,8 +22,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
-      routes: getAppRoutes(), // Use the routes from the routes configuration
+      initialRoute: '/', // Set the initial route to the homepage
+      routes: {
+        '/': (context) => HomePage(), // Define the homepage route
+        '/game': (context) => LousyRocketGameWidget(), // Define the game route
+        '/about': (context) => AboutPage(), // Define the about page route
+        '/rocket': (context) => LousyRocketGameWidget(), // Define the rocket game route
+      },
     );
   }
 }

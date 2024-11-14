@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // Add this import
 
 class ApiService {
-  final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://localhost:5146'; // Use .env variable
+  final String baseUrl = dotenv.env['BASE_URL'] ?? 'http://localhost:5146'; // Use .env variable
 
   Future<http.Response> getRequest(String endpoint) async {
     final url = Uri.parse('$baseUrl$endpoint');

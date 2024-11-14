@@ -9,7 +9,7 @@ import 'astronaut_component.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../overlays/game_over.dart'; // Add this import
-import 'api_service.dart'; // Add this import
+import '../services/api_service.dart'; // Ensure correct import path
 
 class LousyRocketGame extends FlameGame
     with TapDetector, HasCollisionDetection {
@@ -38,7 +38,7 @@ class LousyRocketGame extends FlameGame
   // Define the fixed resolution
   final Vector2 fixedResolution = Vector2(800, 600);
 
-  final ApiService apiService = ApiService(); // Remove base URL argument
+  final ApiService apiService = ApiService(); // Ensure correct instantiation
 
   LousyRocketGame() {
     world = World();
