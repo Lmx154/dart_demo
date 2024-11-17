@@ -111,6 +111,35 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.gamepad),
+            label: 'Game',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info),
+            label: 'About',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.pushNamed(context, '/');
+              break;
+            case 1:
+              Navigator.pushNamed(context, '/rocket');
+              break;
+            case 2:
+              Navigator.pushNamed(context, '/about');
+              break;
+          }
+        },
+      ),
     );
   }
 }

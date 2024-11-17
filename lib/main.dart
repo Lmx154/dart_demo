@@ -23,12 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/', // Set the initial route to the homepage
-      routes: {
-        '/': (context) => HomePage(), // Define the homepage route
-        '/game': (context) => LousyRocketGameWidget(), // Define the game route
-        '/about': (context) => AboutPage(), // Define the about page route
-        '/rocket': (context) => LousyRocketGameWidget(), // Define the rocket game route
-      },
+      routes: getAppRoutes(), // Use routes from routes.dart
     );
   }
 }

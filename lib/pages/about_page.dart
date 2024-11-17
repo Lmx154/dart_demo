@@ -40,9 +40,9 @@ class AboutPage extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.gamepad),
-              title: Text('Lousy Rocket Game'), // Updated title
+              title: Text('Lousy Rocket Game'),
               onTap: () {
-                Navigator.pushNamed(context, '/rocket'); // Updated route
+                Navigator.pushNamed(context, '/rocket');
               },
             ),
           ],

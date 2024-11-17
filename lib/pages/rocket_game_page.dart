@@ -8,9 +8,13 @@ class RocketGamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Lousy Rocket Game'),
+      ),
       body: Stack(
         children: [
           GameWidget(game: game),
+          // Ensure game.isGameOver is correctly handled
           if (game.isGameOver)
             Center(
               child: Column(

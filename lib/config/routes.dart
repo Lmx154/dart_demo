@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import '../pages/home_page.dart';
 import '../pages/about_page.dart';
-import '../pages/lousy_rocket.dart'; // Ensure this import is correct
+import '../pages/rocket_game_page.dart'; // Corrected import
 
 Map<String, WidgetBuilder> getAppRoutes() {
   return {
