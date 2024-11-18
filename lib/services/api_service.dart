@@ -7,7 +7,8 @@ class ApiService {
 
   ApiService({String? baseUrl}) : baseUrl = baseUrl ?? dotenv.env['BASE_URL']!;
 
-  Future<http.Response> postRequest(String endpoint, Map<String, dynamic> data) async {
+  Future<http.Response> postRequest(
+      String endpoint, Map<String, dynamic> data) async {
     final url = Uri.parse('$baseUrl$endpoint');
     final response = await http.post(
       url,
@@ -31,17 +32,22 @@ class ApiService {
 }
 
 class Player {
-  final int playerId;
   final String username;
   final int playerScore;
 
-  Player({required this.playerId, required this.username, required this.playerScore});
+  Player({required this.username, required this.playerScore});
 
   factory Player.fromJson(Map<String, dynamic> json) {
     return Player(
-      playerId: json['playerId'],
       username: json['username'],
       playerScore: json['playerScore'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'username': username,
+      'playerScore': playerScore,
+    };
   }
 }

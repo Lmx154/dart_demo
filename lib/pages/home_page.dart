@@ -91,13 +91,11 @@ class _HomePageState extends State<HomePage> {
                       scrollDirection: Axis.horizontal,
                       child: DataTable(
                         columns: const [
-                          DataColumn(label: Text('Player ID')),
                           DataColumn(label: Text('Username')),
                           DataColumn(label: Text('Score')),
                         ],
                         rows: snapshot.data!.map((player) {
                           return DataRow(cells: [
-                            DataCell(Text(player.playerId.toString())),
                             DataCell(Text(player.username)),
                             DataCell(Text(player.playerScore.toString())),
                           ]);
